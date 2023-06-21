@@ -8,6 +8,17 @@
 </head>
 <body>
   <h1>Stock Chart</h1>
+  <form>
+    <div id="drop-area" style="border: 2px dashed gray; padding: 20px; width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;">
+      <p>Drag and drop a CSV file here, or click to select a file.</p>
+      <input type="file" id="csv-file-input" accept=".csv"/>
+    </div>
+  </form>
+
   <button id="updateGraphButton" onclick="update()">Update Graph</button>
   <canvas id="chart"></canvas>
   <script src="main.js"></script>
