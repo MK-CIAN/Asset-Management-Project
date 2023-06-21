@@ -26,7 +26,7 @@ Papa.parse('./TSLA.csv', {
           datasets: datasets
         },
         options: {
-          responsive: true,
+          responsive: false,
           maintainAspectRatio: false
         },
         plugins: [linearRegression] // Apply the custom plugin

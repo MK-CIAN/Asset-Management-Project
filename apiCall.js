@@ -16,7 +16,12 @@ const options = {
 async function call() {
     try {
         const response = await axios.request(options);
-        const stockData = response.data.prices;
+        const Data = response.data.prices;
+
+        //Displaying only the last weeks data
+        const stockData = Data.slice(0, 62);
+        
+
 
         // Extract headers (assuming all objects have the same properties)
         const headers = Object.keys(stockData[0]);
