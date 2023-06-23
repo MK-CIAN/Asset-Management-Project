@@ -28,8 +28,8 @@ Papa.parse('./TSLA.csv', {
         options: {
           responsive: false,
           maintainAspectRatio: false
-        },
-        plugins: [linearRegression] // Apply the custom plugin
+        }
+        // plugins: [linearRegression] // Apply the custom plugin
       });
     }
   });

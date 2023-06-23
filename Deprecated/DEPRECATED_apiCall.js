@@ -29,31 +29,40 @@ async function call() {
 
         //Sets the stock type
         options.params.symbol = selectedStock;
-        
-        // Sends out an API request to finance server to retreive selected stock 
-        var response = await axios.request(options);
+        var response;   
 
-        const Data = response.data.prices;
+        // Checks to see if we have selected stock saved in localstorage
+        csvString = CheckLocalStorage();
+        // Sends out an API request for data IF data doesnt already exist in local storage
+        if(csvString === null) { 
+            // Sends out an API request to finance server to retreive selected stock 
+            response = await axios.request(options);
 
-        //Displaying the set time frame
-        const timeRange = urlParams.get('timeRange');
-        const stockData = Data.slice(0, timeRange);
+            const Data = response.data.prices;
+
+            //Displaying the set time frame
+            const timeRange = urlParams.get('timeRange');
+            const stockData = Data.slice(0, timeRange);
 
 
-        // Extract headers (assuming all objects have the same properties)
-        const headers = Object.keys(stockData[0]);
+            // Extract headers (assuming all objects have the same properties)
+            const headers = Object.keys(stockData[0]);
 
-        // Convert data to CSV rows
-        const csvRows = [];
-        csvRows.push(headers.join(',')); // Add header row
+            // Convert data to CSV rows
+            const csvRows = [];
+            csvRows.push(headers.join(',')); // Add header row
 
-        stockData.forEach((data) => {
-            const values = headers.map((header) => data[header]);
-            csvRows.push(values.join(','));
-        });
+            stockData.forEach((data) => {
+                const values = headers.map((header) => data[header]);
+                csvRows.push(values.join(','));
+            });
 
-        // Combine rows into a single CSV string
-        csvString = csvRows.join('\n');
+            // Combine rows into a single CSV string
+            csvString = csvRows.join('\n');
+
+            // Saves stock data to localstorage
+            SaveToLocalStorage(csvString, selectedStock);
+        }
     } catch (error) {
         console.error(error);
         return;
@@ -119,5 +128,34 @@ function display(csv) {
     //plugins: [linearRegression] // Apply the custom plugin
     });
 };
+
+// Checks localstorage to see if the selected data is stored or not. Returns the data if its there otherwise returns null
+function CheckLocalStorage(){
+    var data;
+    try {
+        data = localStorage.getItem('GOOGL');
+
+        if(data !== null){
+            console.log("Data found in local storage");
+            return JSON.parse(data);
+        } else {
+            console.log("No data found in local storage. Fetching from server.");
+            return null;
+        }
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+}
+
+function SaveToLocalStorage(csvData, stockName){
+    try {
+        const data = JSON.stringify(csvData);
+        localStorage.setItem(stockName, data);
+        console.log(stockName + " data has been added to localStorage successfully.");
+    } catch (e) {
+        console.error(e);
+    }
+}
 
 call();
