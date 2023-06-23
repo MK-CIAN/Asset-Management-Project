@@ -4,7 +4,7 @@ const options = {
   method: 'GET',
   url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data',
   params: {
-    symbol: 'BTC-USD',
+    symbol: '',
     region: 'US'
   },
   headers: {
@@ -13,13 +13,17 @@ const options = {
   }
 };
 
+const urlParams = new URLSearchParams(window.location.search);
+const selectedStock = urlParams.get('stockType');
+
 async function call() {
     try {
+        options.params.symbol = selectedStock;
         const response = await axios.request(options);
         const Data = response.data.prices;
 
         //Displaying only the last weeks data
-        const stockData = Data.slice(0, 62);
+        const stockData = Data.slice(0, 365);
         
 
 
@@ -99,5 +103,5 @@ function display(csv) {
 };
 
 
-call();
+call(selectedStock);
 

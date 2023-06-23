@@ -7,7 +7,16 @@
   <script src="apiCall.js"></script>
 </head>
 <body>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedStock = urlParams.get('stockType');
+
+    // Display the selected stock
+    const stockDetails = document.createElement('p');
+    stockDetails.textContent = `Selected stock: ${selectedStock}`;
+    document.body.appendChild(stockDetails);
+  </script>
   <canvas id="chart"></canvas>
-<script src="apiCall.js"></script>
+  <script src="apiCall.js"></script>
 </body>
 </html>
