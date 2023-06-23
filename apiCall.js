@@ -1,5 +1,6 @@
 //const axios = require('axios');
 
+//The options for the API call
 const options = {
   method: 'GET',
   url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data',
@@ -13,11 +14,14 @@ const options = {
   }
 };
 
+//Gets the stock type from the url
 const urlParams = new URLSearchParams(window.location.search);
 const selectedStock = urlParams.get('stockType');
 
+//Calls the API
 async function call() {
     try {
+        //Sets the stock type
         options.params.symbol = selectedStock;
         const response = await axios.request(options);
         const Data = response.data.prices;
@@ -56,10 +60,12 @@ async function call() {
 };
 
 function display(csv) {
+    // Converts the CSV string to a 2D array
     const lines = csv.trim().split('\n');
     const headers = lines[0].split(',');
     const rows = lines.slice(1);
 
+    // Converts the 2D array to an array of objects
     const data = rows.map((row) => {
         const values = row.split(',');
         const rowData = {};
