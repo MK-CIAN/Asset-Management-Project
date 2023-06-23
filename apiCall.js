@@ -22,7 +22,7 @@ async function call() {
         const response = await axios.request(options);
         const Data = response.data.prices;
 
-        //Displaying only the last weeks data
+        //Displaying the set time frame
         const urlParams = new URLSearchParams(window.location.search);
         const timeRange = urlParams.get('timeRange');
         const stockData = Data.slice(0, timeRange);
@@ -48,6 +48,7 @@ async function call() {
         console.log(csvString);
 
         display(csvString);
+        console.log(stockData);
     } catch (error) {
         console.error(error);
     }
