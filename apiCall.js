@@ -23,7 +23,9 @@ async function call() {
         const Data = response.data.prices;
 
         //Displaying only the last weeks data
-        const stockData = Data.slice(0, 365);
+        const urlParams = new URLSearchParams(window.location.search);
+        const timeRange = urlParams.get('timeRange');
+        const stockData = Data.slice(0, timeRange);
         
 
 
@@ -63,8 +65,9 @@ function display(csv) {
         headers.forEach((header, index) => {
             if (header === 'date') {
                 const unixTime = parseInt(values[index]);
-                const regularTime = new Date(unixTime * 1000).toLocaleString();
-                rowData[header] = regularTime;
+                const date = new Date(unixTime * 1000);
+                const formattedDate = date.toISOString().split('T')[0];
+                rowData[header] = formattedDate;
             } else {
                 rowData[header] = values[index];
             }
@@ -103,5 +106,5 @@ function display(csv) {
 };
 
 
-call(selectedStock);
+call();
 
