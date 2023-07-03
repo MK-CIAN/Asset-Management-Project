@@ -31,16 +31,24 @@ async function call() {
         const timeRange = urlParams.get('timeRange');
         const stockData = Data.slice(0, timeRange);
         
-
+        //Remove duplicate dates
+        const uniqueDates = new Set();
+        const uniqueStockData = stockData.filter((data) => {    
+            if (!uniqueDates.has(data.date)) {
+                uniqueDates.add(data.date);
+                return true;
+            }
+            return false;
+        });
 
         // Extract headers (assuming all objects have the same properties)
-        const headers = Object.keys(stockData[0]);
+        const headers = Object.keys(uniqueStockData[0]);
 
         // Convert data to CSV rows
         const csvRows = [];
         csvRows.push(headers.join(',')); // Add header row
 
-        stockData.forEach((data) => {
+        uniqueStockData.forEach((data) => {
         const values = headers.map((header) => data[header]);
         csvRows.push(values.join(','));
         });
@@ -52,7 +60,7 @@ async function call() {
         console.log(csvString);
 
         display(csvString);
-        console.log(stockData);
+        console.log(uniqueStockData);
     } catch (error) {
         console.error(error);
     }
