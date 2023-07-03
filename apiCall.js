@@ -30,35 +30,47 @@ async function call() {
         //Sets the stock type
         options.params.symbol = selectedStock;
         
-        // Sends out an API request to finance server to retreive selected stock 
-        var response = await axios.request(options);
+        /////////////////////// UPDATE LATER
+        csvString = await fetch('Stock_Data/'+selectedStock+'.csv').then( response => { if(response.ok) { return response.text() } } ).catch(error => {});
+        if(!csvString){
+            console.log("Couldnt get data for stock " + selectedStock + '.csv');
 
-        const Data = response.data.prices;
+            // Sends out an API request to finance server to retreive selected stock 
+            var response = await axios.request(options);
 
-        //Displaying the set time frame
-        const timeRange = urlParams.get('timeRange');
-        const stockData = Data.slice(0, timeRange);
+            const Data = response.data.prices;
+
+            //Displaying the set time frame
+            const timeRange = urlParams.get('timeRange');
+            const stockData = Data.slice(0, timeRange);
 
 
-        // Extract headers (assuming all objects have the same properties)
-        const headers = Object.keys(stockData[0]);
+            // Extract headers (assuming all objects have the same properties)
+            const headers = Object.keys(stockData[0]);
 
-        // Convert data to CSV rows
-        const csvRows = [];
-        csvRows.push(headers.join(',')); // Add header row
+            // Convert data to CSV rows
+            const csvRows = [];
+            csvRows.push(headers.join(',')); // Add header row
 
-        stockData.forEach((data) => {
-            const values = headers.map((header) => data[header]);
-            csvRows.push(values.join(','));
-        });
+            stockData.forEach((data) => {
+                const values = headers.map((header) => data[header]);
+                csvRows.push(values.join(','));
+            });
 
-        // Combine rows into a single CSV string
-        csvString = csvRows.join('\n');
+            // Combine rows into a single CSV string
+            csvString = csvRows.join('\n');
+
+
+        }
     } catch (error) {
         console.error(error);
         return;
     }
     
+    /////////////////////////////////////////////// DELETE LATER
+    // downloadData(csvString, selectedStock);
+    //////////////////////////////////////////////
+
     // Draws a chart of selected data
     display(csvString);
 };
@@ -121,3 +133,22 @@ function display(csv) {
 };
 
 call();
+
+
+////////////////////////////////////////////////////////// DELETE LATER
+function downloadData(data, stock) {
+    const blob = new Blob([data], { type: 'text/csv' });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = (stock+'.csv');
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
