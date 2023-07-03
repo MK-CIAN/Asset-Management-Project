@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Display API Data</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1"></script>
+  <script src="apiCall.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedStock = urlParams.get('stockType');
+    document.title = `Display API Data - Stock: ${selectedStock}`;
+  </script>
+</head>
+<body>
+  <h1>Stock: <span id="selectedStock"></span></h1>
+  <canvas id="chart"></canvas>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectedStockElement = document.getElementById('selectedStock');
+      const urlParams = new URLSearchParams(window.location.search);
+      const selectedStock = urlParams.get('stockType');
+      selectedStockElement.textContent = selectedStock;
+    });
+  </script>
+  <script src="apiCall.js"></script>
+</body>
+</html>
